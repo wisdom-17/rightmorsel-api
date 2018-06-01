@@ -1,0 +1,67 @@
+/**
+ * Give Recurring Frontend CSS
+ */
+
+/*--------------------------------------------
+Donors Choice Checkbox
+----------------------------------------------*/
+[id*=give-form] .give-recurring-donors-choice {
+    margin: 0 0 25px;
+    display: block;
+    line-height:1em;
+    clear: both;
+    cursor: pointer;
+}
+
+[id*=give-form] .give-recurring-donors-choice label {
+    cursor: pointer;
+    font-size: 16px;
+    display:inline-block;
+    margin:0;
+    padding:0;
+}
+
+[id*=give-form] .give-recurring-donors-choice input[type="checkbox"] {
+    margin: 0 3px 0 0;
+    position: relative;
+    width: auto;
+}
+
+.give-recurring-donors-choice + .give-btn-modal, .give-recurring-donors-choice + .give-btn-reveal {
+    display: block;
+}
+
+/* Admin Choice */
+[id*='give-form'].give-recurring-form-admin fieldset {
+    clear: both;
+}
+
+[id*='give-form'].give-recurring-form-admin span.give-recurring-admin-choice {
+    float: left;
+    font-size: 18px;
+    font-style: italic;
+    margin: 0 0 0 10px;
+}
+
+[id*='give-form'].give-recurring-form-admin div.give-donation-amount, [id*='give-form'].give-recurring-form-admin p.give-donation-amount {
+    float: left
+}
+
+/*--------------------------------------------
+Donation Receipt Subscription
+----------------------------------------------*/
+
+.give-subscription-billing-cycle {
+    font-style: italic;
+    display: block;
+}
+
+.give-receipt-thead-text {
+    font-size: 16px;
+    text-align: center;
+    display: block;
+}
+
+table#give-subscription-receipt td, table#give-subscription-receipt th {
+    text-align:left;
+}
