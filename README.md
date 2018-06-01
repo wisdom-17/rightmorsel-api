@@ -3,8 +3,8 @@
 This application provides an API to retrieve, add, edit and delete [HMC approved](https://halalhmc.org/) restaurants.
 
 ### Prerequisites
-PHP 5.5.9 or higher
-Composer
+*PHP 5.5.9 or higher
+*Composer
 
 ### Installing
 Run the following command to install project dependencies.
