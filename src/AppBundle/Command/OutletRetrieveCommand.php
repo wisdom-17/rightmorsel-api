@@ -54,7 +54,9 @@ class OutletRetrieveCommand extends ContainerAwareCommand
         }
 
         // save using our api
-
+        foreach($outlets as $outletName){
+            
+        }
 
         $output->writeln('Command result.');
     }

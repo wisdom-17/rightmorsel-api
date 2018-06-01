@@ -31,34 +31,6 @@ class OutletController extends Controller
         $response = $OutletTableWriter->insertOutlet($outletName, null, $propertyNumber, $streetName, $area, $town, $contactNumber, $postcode);
 
         return $response;
-        // var_dump(get_class($outlet));die;
-
-		// $outlet = new Outlet();
-		// $outlet->setOutletName($outletName);
-		// $outlet->setBuildingName($buildingName);
-		// $outlet->setPropertyNumber($propertyNumber);
-		// $outlet->setStreetName($streetName);
-		// $outlet->setArea($area);
-		// $outlet->setTown($town);
-		// $outlet->setContactNumber($contactNumber);
-		// $outlet->setPostCode($postcode);
-		// $outlet->setIsActive(0);
-
-  // 		$validator = $this->get('validator'); // validate constraints
-  //   	$errors = $validator->validate($outlet);
-  //   	if (count($errors) > 0) {
-		// 	$response = new Response('', 422, array('content-type' => 'text/html'));
-
-	 //        $errorsString = (string) $errors;
-	 //        $response->setContent($errorsString);
-	 //        return $response;
-	 //    }
-
-
-
-		// $em = $this->getDoctrine()->getManager();
-		// $em->persist($outlet);
-		// $em->flush(); // save
     }
 
     /**
