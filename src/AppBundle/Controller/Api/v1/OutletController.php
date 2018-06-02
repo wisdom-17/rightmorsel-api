@@ -17,7 +17,7 @@ class OutletController extends Controller
      * @Route("/api/v1/outlet")
      * @Method("POST")
      */
-    public function newAction(Request $request, OutletTableWriter $OutletTableWriter) 
+    public function newAction(Request $request, OutletTableWriter $outletTableWriter) 
     {
 		$outletName 		= $request->get('outletName');
 		$buildingName 		= $request->get('buildingName');
@@ -28,7 +28,7 @@ class OutletController extends Controller
         $contactNumber 		= $request->get('contactNumber');
         $postcode 			= $request->get('postcode');
         
-        $response = $OutletTableWriter->insertOutlet($outletName, null, $propertyNumber, $streetName, $area, $town, $contactNumber, $postcode);
+        $response = $outletTableWriter->insertOutlet($outletName, $buildingName, $propertyNumber, $streetName, $area, $town, $contactNumber, $postcode);
 
         return $response;
     }

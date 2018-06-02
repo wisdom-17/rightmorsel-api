@@ -7,7 +7,8 @@ use Goutte\Client;
 class OutletScraper
 {
 	private $url;
-	private $outlets;
+	public $outlets;
+	public $abnormalFormatOutlets;
 
 	public function __construct($url = null)
 	{
@@ -39,7 +40,7 @@ class OutletScraper
 			$formattedAddress				= $this->parseAddress($outletAddresses[$key]);
 
 			if($formattedAddress == false){
-				$this->unformattedOutlets[$outletName] = $outletAddresses[$key];
+				$this->abnormalFormatOutlets[$outletName] = $outletAddresses[$key];
 			}else{
 				$outletDetails['outletName'] 	= $outletName;
 				$outletDetails['outletAddress']	= $formattedAddress;
@@ -50,7 +51,7 @@ class OutletScraper
 		return $this->outlets;
 	}
 	
-	public function parseAddress($outletAddress)
+	private function parseAddress($outletAddress)
 	{
 		$outletAddress 			= trim($outletAddress);
 		$outletAddressArray 	= explode(',', $outletAddress);
