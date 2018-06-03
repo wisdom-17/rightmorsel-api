@@ -51,25 +51,25 @@ class OutletScraper
 		return $this->outlets;
 	}
 	
-	private function parseAddress($outletAddress)
+	public function parseAddress($outletAddress)
 	{
 		$outletAddress 			= trim($outletAddress);
 		$outletAddressArray 	= explode(',', $outletAddress);
-		$addressFirstLine 		= explode(' ', $outletAddressArray[0]); // extract building name, number and street name
+		$addressFirstLine 		= $outletAddressArray[0];
 
-		 // identify whether address starts with a building name or property number
-		$addressFirstPart 		= array_shift($addressFirstLine);
-		$buildingName			= null;
+		// parse property number
+		preg_match('/\A\d+[a-zA-Z]?\s?-?\s\d*/', $addressFirstLine, $matches);
 
-		if(is_numeric($addressFirstPart[0])){ // check if it begins with a number 
-			// we are dealing with a simple and straightforward address i.e. no building name
-			$propertyNumber = $addressFirstPart;
-			$streetName 	= implode(' ', $addressFirstLine); // join the remaining elements
-			$area 			= trim($outletAddressArray[1]); // extract area
-			$town			= trim($outletAddressArray[2]); //extract town
-		}else{ // address format does not follow the same format so will have to be manually entered later
+		if(count($matches) === 0){
 			return false;
 		}
+
+		// we are dealing with a simple and straightforward address i.e. no building name
+		$propertyNumber = trim($matches[0]);
+		$streetName 	= trim(substr($addressFirstLine, strpos($addressFirstLine, $propertyNumber)+strlen($propertyNumber)));
+
+		$area 			= trim($outletAddressArray[1]); // extract area
+		$town			= trim($outletAddressArray[2]); //extract town
 	
 		$postcodeTelephoneArray = explode('   ',end($outletAddressArray));
 		$postcode 				= trim($postcodeTelephoneArray[0]);		// extract postcode
@@ -77,8 +77,8 @@ class OutletScraper
 		$telephone 				= ($telephone == '-') ? null : $telephone;
 
 		$parsedOutletAddress = [
-			'buildingName'			=> $buildingName,
-			'propertyNumber' 		=> $propertyNumber,
+			'buildingName'			=> null,
+			'propertyNumber' 		=> trim($propertyNumber),
 			'streetName'			=> $streetName,
 			'area'					=> $area,
 			'town'					=> $town,
