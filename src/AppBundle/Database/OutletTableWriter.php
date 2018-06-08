@@ -13,17 +13,31 @@ class OutletTableWriter
 
 	private $entityManager;
 
-    public function __construct(ValidatorInterface $validator, EntityManagerInterface $em/*, Response $response*/)
+    public function __construct(ValidatorInterface $validator, EntityManagerInterface $em)
     {
         $this->validator 	= $validator;
         $this->em 			= $em;
-        // $this->response 	= $response;
 
     }
 
 	// inserts outlet to db
 	public function insertOutlet($outletName, $buildingName = null, $propertyNumber, $streetName, $area, $town, $contactNumber, $postcode)
 	{
+		// check if outlet exists already
+		$outletExists = ($this->em->getRepository('AppBundle\Entity\Outlet')->findOneBy(array(
+				'outletName' 	=> $outletName,
+				'postCode'		=> $postcode
+			)) !== null ? true : false
+		);
+
+
+		if($outletExists === true){
+			$response = new Response('', 422, array('content-type' => 'text/html'));
+
+	        $response->setContent('Outlet already exists');
+	        return $response;
+		}
+
 		$outlet = new Outlet();
 		$outlet->setOutletName($outletName);
 		$outlet->setBuildingName($buildingName);
