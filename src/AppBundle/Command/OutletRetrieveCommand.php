@@ -3,6 +3,7 @@
 namespace AppBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -34,6 +35,9 @@ class OutletRetrieveCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
+        $io = new SymfonyStyle($input, $output);
+        
         $url            = $input->getArgument('url');
         $outletScraper  = new OutletScraper($url);
 
@@ -43,13 +47,13 @@ class OutletRetrieveCommand extends ContainerAwareCommand
 
         // highlight outlets which will not be saved automatically
         if(count($abnormalFormatOutlets) > 0){
-            $output->writeln([
+            $io->text([
                 'The following outlets could not be parsed reliably: ',
                 '',
             ]);
 
             foreach ($abnormalFormatOutlets as $outletName => $outletAddress) {
-                $output->writeln([
+                $io->text([
                     $outletName,
                     $outletAddress,
                 ]);
@@ -61,7 +65,7 @@ class OutletRetrieveCommand extends ContainerAwareCommand
             $outletName     = $outletDetails['outletName'];
             $outletAddress  = $outletDetails['outletAddress'];
 
-            $output->writeln([
+            $io->text([
                 'Processing: '.$outletName
             ]);
 
@@ -80,11 +84,12 @@ class OutletRetrieveCommand extends ContainerAwareCommand
             if($response->getStatusCode() === 201){
                 $savedOutletsCount++;
             }else{
-                $output->writeln('Oulet could not be saved because: '.$response->getContent());
+                $io->text('<error>Oulet could not be saved because: '.$response->getContent().'</>');
             }
+            $io->newLine(1);
         }
 
-        $output->writeln('Successfully saved '.$savedOutletsCount.' outlets');
+        $io->success('Successfully saved '.$savedOutletsCount.' outlets');
     }
 
 }
