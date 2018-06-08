@@ -79,6 +79,8 @@ class OutletRetrieveCommand extends ContainerAwareCommand
             // if successful, increment count
             if($response->getStatusCode() === 201){
                 $savedOutletsCount++;
+            }else{
+                $output->writeln('Oulet could not be saved because: '.$response->getContent());
             }
         }
 
