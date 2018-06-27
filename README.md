@@ -18,6 +18,10 @@ Create database with the following command (should not be used on production):
 
 ```php bin/console doctrine:database:create``` 
 
+Create the database tables (based on Doctrine entity classes) with the following command (shoult not be used on production):
+
+```php bin/console doctrine:schema:create```
+
 To populate the database with initial outlet:
 
 ```php bin/console outlet:retrieve "https://halalhmc.org/outlets/?cat=restaurants-and-takeaways&distance=25&q=London%2C+UK&lat=&lang="```
