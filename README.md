@@ -14,15 +14,15 @@ composer install
 ### Set up database
 Database name and host will be configured when the ```composer install``` runs.
 
-Create database with the following command (should not be used on production):
+1) Create database with the following command (should not be used on production):
 
 ```php bin/console doctrine:database:create``` 
 
-Create the database tables (based on Doctrine entity classes) with the following command (shoult not be used on production):
+2) Create the database tables (based on Doctrine entity classes) with the following command (shoult not be used on production):
 
 ```php bin/console doctrine:schema:create```
 
-To populate the database with initial outlet:
+3) To populate the database with initial outlet:
 
 ```php bin/console outlet:retrieve "https://halalhmc.org/outlets/?cat=restaurants-and-takeaways&distance=25&q=London%2C+UK&lat=&lang="```
 
@@ -35,6 +35,7 @@ PHPUnit tests can be run by the following command:
 ## Built with
 * [Symfony](https://symfony.com/doc/3.4//index.html) The web framework used.
 * [Doctrine](https://www.doctrine-project.org/projects/doctrine-orm/en/2.5/index.html) ORM layer.
+* [Gouette](https://github.com/FriendsOfPHP/Goutte) Used to retrieve outlets from HMC websites.
 
 ## Author
 Saeed Bhuta
