@@ -11,6 +11,17 @@ Run the following command to install project dependencies.
 composer install
 ```
 
+### Set up database
+Database name and host will be configured when the ```composer install``` runs.
+
+Create database with the following command (should not be used on production):
+
+```php bin/console doctrine:database:create``` 
+
+To populate the database with initial outlet:
+
+```php bin/console outlet:retrieve "https://halalhmc.org/outlets/?cat=restaurants-and-takeaways&distance=25&q=London%2C+UK&lat=&lang="```
+
 ## Tests
 PHPUnit tests can be run by the following command:
 ```
