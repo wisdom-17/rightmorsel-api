@@ -50,7 +50,7 @@ class OutletScraper
 			}else{
 				$outletDetails['outletName'] 	= $outletName;
 				$outletDetails['outletAddress']	= $formattedAddress;
-				$this->outlets[] 			= $outletDetails;
+				$this->outlets[] 			    = $outletDetails;
 			}
 		}
 
