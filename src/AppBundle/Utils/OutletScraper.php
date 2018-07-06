@@ -32,7 +32,7 @@ class OutletScraper
 		$crawler = $crawler->filterXPath('//div[@id="outlet_items"]/*');
 
 		// scrape names
-		$outletNames = $crawler->filter('Disabarticle')->each(function ($node) {
+		$outletNames = $crawler->filter('article')->each(function ($node) {
 			return $node->filter('div.outlet-content div.outlet-title h3')->text();
 		});
 
