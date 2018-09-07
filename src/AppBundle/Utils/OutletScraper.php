@@ -42,6 +42,9 @@ class OutletScraper
 			if($formattedAddress == false){
 				$this->abnormalFormatOutlets[$outletName] = $outletAddresses[$key];
 			}else{
+				// check that outlet does not exist
+					// geo code outlet
+
 				$outletDetails['outletName'] 	= $outletName;
 				$outletDetails['outletAddress']	= $formattedAddress;
 				$this->outlets[] 			= $outletDetails;
