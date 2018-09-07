@@ -3,6 +3,7 @@
 namespace AppBundle\Utils;
 
 use Goutte\Client;
+use GuzzleHttp\Client as GuzzleClient;
 
 class OutletScraper
 {
@@ -21,6 +22,11 @@ class OutletScraper
 	public function scrapeOutlets()
 	{
 		$goutteClient = new Client();
+
+        $goutteClient->setClient(new GuzzleClient(array(
+            // disable SSL certificate check
+            'verify' => false
+        )));
 
 		$crawler = $goutteClient->request('GET', $this->url);
 		$crawler = $crawler->filterXPath('//div[@id="outlet_items"]/*');
@@ -47,7 +53,7 @@ class OutletScraper
 
 				$outletDetails['outletName'] 	= $outletName;
 				$outletDetails['outletAddress']	= $formattedAddress;
-				$this->outlets[] 			= $outletDetails;
+				$this->outlets[] 			    = $outletDetails;
 			}
 		}
 
