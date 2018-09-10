@@ -4,13 +4,14 @@
 namespace Tests\AppBundle\Utils;
 
 use AppBundle\Utils\OutletScraper;
+use Geocoder\Provider\Provider;
 use PHPUnit\Framework\TestCase;
 
 class OutletScraperTest extends TestCase
 {
     public function testScrapeOutlets()
     {
-    	$scraper 	= new OutletScraper('http://127.0.0.1:8000/test-webpage/test.html');
+    	$scraper 	= new OutletScraper('http://127.0.0.1:8000/test-webpage/test.html', new Provider);
 
     	$outlets 	= $scraper->scrapeOutlets();
 
@@ -25,14 +26,19 @@ class OutletScraperTest extends TestCase
     public function testParseAddress($address, $expectedAddress)
     {
 
-        $scraper             = new OutletScraper('http://127.0.0.1:8000/test-webpage/test.html');
+        $scraper             = new OutletScraper('http://127.0.0.1:8000/test-webpage/test.html', new Provider);
         $parsedOutletAddress = $scraper->parseAddress($address);
 
         $this->assertEquals($expectedAddress, $parsedOutletAddress);
     }
 
-	public function testGeocodePostcode()
+	public function testGeocodeAddress()
     {
+        $scraper = new OutletScraper('http://127.0.0.1:8000/test-webpage/test.html', new Provider);
+
+        $geocodedAddress = $scraper->geocodeAddress('770 London Road, Thornton Heath, London, CR7 6JB');
+
+        $this->assertEquals(array('lat' => '51.3946472', 'lon' => '-0.1143172'), $geocodedAddress);
 
     }
 
