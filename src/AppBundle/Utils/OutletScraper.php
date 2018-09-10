@@ -4,15 +4,19 @@ namespace AppBundle\Utils;
 
 use Goutte\Client;
 use GuzzleHttp\Client as GuzzleClient;
+use Geocoder\Provider\Provider;
+
 
 class OutletScraper
 {
 	private $url;
+	private $geocodingProvider;
 	public $outlets;
 	public $abnormalFormatOutlets;
 
-	public function __construct($url = null)
+	public function __construct($url = null, Provider $geocodingProvider)
 	{
+		$this->geocodingProvider		= $geocodingProvider;
 		$this->url 						= $url;
 		$this->outlets 					= [];
 		$this->abnormalFormatOutlets 	= [];
@@ -98,8 +102,13 @@ class OutletScraper
 		return $parsedOutletAddress;
 	}
 
-	private function geocodePostcode()
+	public function geocodeAddress($address)
 	{
+
+
+		var_dump($this->geocodingProvider->geocodeQuery(GeocoderQuery::create($address)));
+
+		die;
 
 	}
 }

@@ -35,3 +35,7 @@ services:
     #         $someArgument: 'some_value'
     AppBundle\Utils\OutletScraper:
         public: false
+        shared: false
+        arguments:
+            $geocodingProvider: '@bazinga_geocoder.provider.acme'
+            $url: ~ # represents null (also default), but can be replaced with any url string
