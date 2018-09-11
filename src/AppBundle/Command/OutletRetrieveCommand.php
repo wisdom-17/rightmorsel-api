@@ -11,6 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use AppBundle\Utils\OutletScraper;
 use AppBundle\Database\OutletTableWriter;
 
+
 class OutletRetrieveCommand extends ContainerAwareCommand
 {
     private $outletScraper;
@@ -39,11 +40,11 @@ class OutletRetrieveCommand extends ContainerAwareCommand
         $io = new SymfonyStyle($input, $output);
         
         $url            = $input->getArgument('url');
-        $outletScraper  = new OutletScraper($url);
+        // $outletScraper  = new OutletScraper($url, new Provider());
 
-        $outlets            = $outletScraper->scrapeOutlets(); // get outlets
+        $outlets            = $this->outletScraper->scrapeOutlets(); // get outlets
 
-        $abnormalFormatOutlets = $outletScraper->abnormalFormatOutlets;
+        $abnormalFormatOutlets = $this->outletScraper->abnormalFormatOutlets;
 
         // highlight outlets which will not be saved automatically
         if(count($abnormalFormatOutlets) > 0){
@@ -59,6 +60,8 @@ class OutletRetrieveCommand extends ContainerAwareCommand
                 ]);
             }
         }
+
+        // $outletTableWriter = new OutletTableWriter();
         
         $savedOutletsCount = 0;
         foreach($outlets as $outletDetails){
@@ -69,6 +72,7 @@ class OutletRetrieveCommand extends ContainerAwareCommand
                 'Processing: '.$outletName
             ]);
 
+            // $response = $this->outletTableWriter->insertOutlet( // save each outlet
             $response = $this->outletTableWriter->insertOutlet( // save each outlet
                 $outletName, 
                 $outletAddress['buildingName'], 
