@@ -6,16 +6,19 @@ use Goutte\Client;
 use GuzzleHttp\Client as GuzzleClient;
 use Geocoder\Provider\Provider;
 use Geocoder\Query\GeocodeQuery;
+use Doctrine\ORM\EntityManagerInterface;
 
 class OutletScraper
 {
 	private $geocoder;
+	private $em;
 	public $outlets;
 	public $abnormalFormatOutlets;
 
-	public function __construct(Provider $geocoder)
+	public function __construct(Provider $geocoder, EntityManagerInterface $em)
 	{
 		$this->geocoder					= $geocoder;
+		$this->em 						= $em;
 		$this->outlets 					= [];
 		$this->abnormalFormatOutlets 	= [];
 	}
@@ -51,11 +54,25 @@ class OutletScraper
 				$this->abnormalFormatOutlets[$outletName] = $outletAddresses[$key];
 			}else{
 				// check that outlet does not exist in our db
-					// geo code outlet
+				$outletExists = ($this->em->getRepository('AppBundle\Entity\Outlet')->findOneBy(array(
+						'outletName' 	=> $outletName,
+						'postCode'		=> $formattedAddress['postcode']
+					)) !== null ? true : false
+				);
 
-				$outletDetails['outletName'] 	= $outletName;
-				$outletDetails['outletAddress']	= $formattedAddress;
-				$this->outlets[] 			    = $outletDetails;
+				if($outletExists === false){
+					// geo code outlet
+					$address = $formattedAddress['propertyNumber'].' '.$formattedAddress['streetName'].', '.$formattedAddress['town'].', '.$formattedAddress['postcode'];
+					$coordinates = $this->geocodeAddress($address);
+
+					$outletDetails['outletName'] 	= $outletName;
+					$outletDetails['outletAddress']	= $formattedAddress;
+					$outletDetails['longitude']		= $coordinates[0];
+					$outletDetails['latitude']		= $coordinates[1];
+					$this->outlets[] 			    = $outletDetails;
+				}
+
+				
 			}
 		}
 

@@ -81,7 +81,9 @@ class OutletRetrieveCommand extends ContainerAwareCommand
                 $outletAddress['area'], 
                 $outletAddress['town'], 
                 $outletAddress['contactNumber'], 
-                $outletAddress['postcode']
+                $outletAddress['postcode'],
+                $outletDetails['longitude'],
+                $outletDetails['latitude']
             ); 
 
             // if successful, increment count

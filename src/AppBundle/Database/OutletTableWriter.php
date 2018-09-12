@@ -21,7 +21,7 @@ class OutletTableWriter
     }
 
 	// inserts outlet to db
-	public function insertOutlet($outletName, $buildingName = null, $propertyNumber, $streetName, $area, $town, $contactNumber, $postcode)
+	public function insertOutlet($outletName, $buildingName = null, $propertyNumber, $streetName, $area, $town, $contactNumber, $postcode, $longitude, $latitude)
 	{
 		// check if outlet exists already
 		$outletExists = ($this->em->getRepository('AppBundle\Entity\Outlet')->findOneBy(array(
@@ -47,6 +47,8 @@ class OutletTableWriter
 		$outlet->setTown($town);
 		$outlet->setContactNumber($contactNumber);
 		$outlet->setPostCode($postcode);
+		$outlet->setLongitude($longitude);
+		$outlet->setLatitude($latitude);
 		$outlet->setIsActive(0);
 
   		// $validator = $this->get('validator'); // validate constraints
