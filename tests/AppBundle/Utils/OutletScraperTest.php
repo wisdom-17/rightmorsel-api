@@ -6,14 +6,24 @@ namespace Tests\AppBundle\Utils;
 use AppBundle\Utils\OutletScraper;
 use Geocoder\Provider\Provider;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class OutletScraperTest extends TestCase
+class OutletScraperTest extends KernelTestCase
 {
+    private $outletScraper;
+
+    protected function setUp()
+    {
+        self::bootKernel();
+
+        $this->outletScraper = static::$kernel
+            ->getContainer()
+            ->get('AppBundle\Utils\OutletScraper');
+    }
+
     public function testScrapeOutlets()
     {
-    	$scraper 	= new OutletScraper('http://127.0.0.1:8000/test-webpage/test.html', new Provider);
-
-    	$outlets 	= $scraper->scrapeOutlets();
+    	$outlets 	= $this->outletScraper->scrapeOutlets('http://127.0.0.1:8000/test-webpage/test.html');
 
     	$this->assertCount(210, $outlets);
     	$this->assertArrayHasKey('outletName', $outlets[0]);
@@ -25,21 +35,16 @@ class OutletScraperTest extends TestCase
      */
     public function testParseAddress($address, $expectedAddress)
     {
-
-        $scraper             = new OutletScraper('http://127.0.0.1:8000/test-webpage/test.html', new Provider);
-        $parsedOutletAddress = $scraper->parseAddress($address);
+        $parsedOutletAddress = $this->outletScraper->parseAddress($address);
 
         $this->assertEquals($expectedAddress, $parsedOutletAddress);
     }
 
 	public function testGeocodeAddress()
     {
-        $scraper = new OutletScraper('http://127.0.0.1:8000/test-webpage/test.html', new Provider);
-
-        $geocodedAddress = $scraper->geocodeAddress('770 London Road, Thornton Heath, London, CR7 6JB');
+        $geocodedAddress = $this->outletScraper->geocodeAddress('770 London Road, Thornton Heath, London, CR7 6JB');
 
         $this->assertEquals(array('lat' => '51.3946472', 'lon' => '-0.1143172'), $geocodedAddress);
-
     }
 
     public function addressProvider()

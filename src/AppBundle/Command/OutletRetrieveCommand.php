@@ -42,7 +42,7 @@ class OutletRetrieveCommand extends ContainerAwareCommand
         $url            = $input->getArgument('url');
         // $outletScraper  = new OutletScraper($url, new Provider());
 
-        $outlets            = $this->outletScraper->scrapeOutlets(); // get outlets
+        $outlets            = $this->outletScraper->scrapeOutlets($url); // get outlets
 
         $abnormalFormatOutlets = $this->outletScraper->abnormalFormatOutlets;
 

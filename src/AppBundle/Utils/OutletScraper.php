@@ -14,16 +14,15 @@ class OutletScraper
 	public $outlets;
 	public $abnormalFormatOutlets;
 
-	public function __construct($url = null, Provider $geocodingProvider)
+	public function __construct(Provider $geocodingProvider)
 	{
 		$this->geocodingProvider		= $geocodingProvider;
-		$this->url 						= $url;
 		$this->outlets 					= [];
 		$this->abnormalFormatOutlets 	= [];
 	}
 
 	// returns an array of outlets and their details
-	public function scrapeOutlets()
+	public function scrapeOutlets($url = '')
 	{
 		$goutteClient = new Client();
 
@@ -32,7 +31,7 @@ class OutletScraper
             'verify' => false
         )));
 
-		$crawler = $goutteClient->request('GET', $this->url);
+		$crawler = $goutteClient->request('GET', $url);
 		$crawler = $crawler->filterXPath('//div[@id="outlet_items"]/*');
 
 		// scrape names
@@ -106,9 +105,9 @@ class OutletScraper
 	{
 
 
-		var_dump($this->geocodingProvider->geocodeQuery(GeocoderQuery::create($address)));
+		// var_dump($this->geocodingProvider->geocodeQuery(GeocoderQuery::create($address)));
 
-		die;
+		// die;
 
 	}
 }
