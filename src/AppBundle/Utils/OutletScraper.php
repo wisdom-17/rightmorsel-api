@@ -5,18 +5,17 @@ namespace AppBundle\Utils;
 use Goutte\Client;
 use GuzzleHttp\Client as GuzzleClient;
 use Geocoder\Provider\Provider;
-
+use Geocoder\Query\GeocodeQuery;
 
 class OutletScraper
 {
-	private $url;
-	private $geocodingProvider;
+	private $geocoder;
 	public $outlets;
 	public $abnormalFormatOutlets;
 
-	public function __construct(Provider $geocodingProvider)
+	public function __construct(Provider $geocoder)
 	{
-		$this->geocodingProvider		= $geocodingProvider;
+		$this->geocoder					= $geocoder;
 		$this->outlets 					= [];
 		$this->abnormalFormatOutlets 	= [];
 	}
@@ -51,7 +50,7 @@ class OutletScraper
 			if($formattedAddress == false){
 				$this->abnormalFormatOutlets[$outletName] = $outletAddresses[$key];
 			}else{
-				// check that outlet does not exist
+				// check that outlet does not exist in our db
 					// geo code outlet
 
 				$outletDetails['outletName'] 	= $outletName;
@@ -103,11 +102,14 @@ class OutletScraper
 
 	public function geocodeAddress($address)
 	{
+		$coordinates 		= [];
+		$addressCollection 	= $this->geocoder->geocodeQuery(GeocodeQuery::create($address));
 
-
-		// var_dump($this->geocodingProvider->geocodeQuery(GeocoderQuery::create($address)));
-
-		// die;
-
+		if($addressCollection->count() > 0){
+			$address 			= $addressCollection->first();
+			$coordinates 		= $address->getCoordinates()->toArray();	
+		}
+		
+		return $coordinates;
 	}
 }

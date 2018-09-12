@@ -44,7 +44,14 @@ class OutletScraperTest extends KernelTestCase
     {
         $geocodedAddress = $this->outletScraper->geocodeAddress('770 London Road, Thornton Heath, London, CR7 6JB');
 
-        $this->assertEquals(array('lat' => '51.3946472', 'lon' => '-0.1143172'), $geocodedAddress);
+        $this->assertEquals(array('-0.1143172','51.3946472'), $geocodedAddress);
+    }
+
+    public function testGeocodeInvalidAddress()
+    {
+        $geocodedAddress = $this->outletScraper->geocodeAddress('dcadcd');
+
+        $this->assertEquals(array(), $geocodedAddress);
     }
 
     public function addressProvider()

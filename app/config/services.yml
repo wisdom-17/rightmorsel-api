@@ -37,4 +37,4 @@ services:
         public: false
         shared: false
         arguments:
-            $geocodingProvider: '@bazinga_geocoder.provider.acme'
+            $geocoder: '@bazinga_geocoder.provider.acme'
