@@ -14,3 +14,11 @@ web_profiler:
 
 swiftmailer:
     disable_delivery: true
+
+doctrine:
+    # ...
+    dbal:
+        host:     localhost
+        dbname:   outlets_api_test
+        user:     root
+        password: 123456

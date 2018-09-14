@@ -7,18 +7,21 @@ use AppBundle\Utils\OutletScraper;
 use Geocoder\Provider\Provider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Geocoder\Model\Coordinates;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class OutletScraperTest extends KernelTestCase
+class OutletScraperTest extends WebTestCase
 {
     private $outletScraper;
 
     protected function setUp()
     {
-        self::bootKernel();
+        // This will instantiate your Symfony application in the test environment
+        $client = static::createClient();
+        $container = $client->getContainer();
+        $outletScraper = $container->get(OutletScraper::class);
 
-        $this->outletScraper = static::$kernel
-            ->getContainer()
-            ->get('AppBundle\Utils\OutletScraper');
+        $this->outletScraper = $outletScraper;
     }
 
     public function testScrapeOutlets()
