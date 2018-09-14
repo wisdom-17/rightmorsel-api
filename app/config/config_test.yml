@@ -19,6 +19,6 @@ doctrine:
     # ...
     dbal:
         host:     localhost
-        dbname:   outlets_api_test
+        dbname:   rightmorsel-api-test
         user:     root
         password: 123456
