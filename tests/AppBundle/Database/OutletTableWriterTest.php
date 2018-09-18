@@ -13,7 +13,6 @@ class OutletTableWriterTest extends TestCase
 {
 
     private $validator;
-
     private $mockEm;
 
     public function __construct()

@@ -6,20 +6,36 @@ namespace Tests\AppBundle\Utils;
 use AppBundle\Utils\OutletScraper;
 use Geocoder\Provider\Provider;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Geocoder\Model\Coordinates;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Geocoder\Model\AddressCollection;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Common\Persistence\ObjectRepository;
 
-class OutletScraperTest extends WebTestCase
+class OutletScraperTest extends TestCase
 {
     private $outletScraper;
+    private $mockGeocoder;
+    private $mockEm;
 
     protected function setUp()
     {
-        // This will instantiate your Symfony application in the test environment
-        $client = static::createClient();
-        $container = $client->getContainer();
-        $outletScraper = $container->get(OutletScraper::class);
+        $this->mockGeocoder = $this->createMock(Provider::class);
+        $this->mockEm       = $this->createMock(EntityManagerInterface::class);
+
+        $outlet = null;
+        // mock the repository so it returns the mock of the outlet
+        $outletRepository = $this->createMock(ObjectRepository::class);
+
+        $outletRepository->expects($this->any())
+            ->method('findOneBy')
+            ->willReturn($outlet);
+
+        // get the EntityManager to return the mock of the repository
+        $this->mockEm->expects($this->any())
+            ->method('getRepository')
+            ->willReturn($outletRepository);
+
+        $outletScraper = new OutletScraper($this->mockGeocoder, $this->mockEm);
 
         $this->outletScraper = $outletScraper;
     }
@@ -45,7 +61,20 @@ class OutletScraperTest extends WebTestCase
 
 	public function testGeocodeAddress()
     {
-        $geocodedAddress = $this->outletScraper->geocodeAddress('770 London Road, Thornton Heath, London, CR7 6JB');
+        $mockGeocoder = $this->createMock(Provider::class);
+        $mockEm       = $this->createMock(EntityManagerInterface::class);
+
+        $coordinates = new Coordinates(-0.1143172, 51.3946472);
+
+        $addressCollection = new AddressCollection([$coordinates]);
+
+        $mockGeocoder->expects($this->any())
+            ->method('geocodeQuery')
+            ->willReturn($addressCollection);
+
+        $outletScraper = new OutletScraper($mockGeocoder, $mockEm);
+
+        $geocodedAddress = $outletScraper->geocodeAddress('770 London Road, Thornton Heath, London, CR7 6JB');
 
         $this->assertEquals(array('-0.1143172','51.3946472'), $geocodedAddress);
     }
