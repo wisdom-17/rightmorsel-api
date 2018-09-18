@@ -67,8 +67,15 @@ class OutletScraper
 
 					$outletDetails['outletName'] 	= $outletName;
 					$outletDetails['outletAddress']	= $formattedAddress;
-					$outletDetails['longitude']		= $coordinates[0];
-					$outletDetails['latitude']		= $coordinates[1];
+
+					if(count($coordinates) > 0){
+						$outletDetails['longitude']		= $coordinates[0];
+						$outletDetails['latitude']		= $coordinates[1];
+					}else{
+						$outletDetails['longitude']		= null;
+						$outletDetails['latitude']		= null;
+					}
+					
 					$this->outlets[] 			    = $outletDetails;
 				}
 
