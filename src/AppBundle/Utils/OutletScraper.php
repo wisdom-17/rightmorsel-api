@@ -59,6 +59,9 @@ class OutletScraper
 		foreach ($outletNames as $key => $outletName) {
 			$outletDetails 							= [];
 			$outletDetails['certificationStatus'] 	= $certificationStatus[$key];
+			$outletDetails['longitude']				= null;
+			$outletDetails['latitude']				= null;
+			
 			$formattedAddress				= $this->parseAddress($outletAddresses[$key]);
 
 			if($formattedAddress == false){
@@ -76,19 +79,15 @@ class OutletScraper
 					$address = $formattedAddress['propertyNumber'].' '.$formattedAddress['streetName'].', '.$formattedAddress['town'].', '.$formattedAddress['postcode'];
 					$coordinates = $this->geocodeAddress($address);
 
-					$outletDetails['outletName'] 	= $outletName;
-					$outletDetails['outletAddress']	= $formattedAddress;
-
 					if(count($coordinates) > 0){
 						$outletDetails['longitude']		= $coordinates[0];
 						$outletDetails['latitude']		= $coordinates[1];
-					}else{
-						$outletDetails['longitude']		= null;
-						$outletDetails['latitude']		= null;
 					}
-					
-					$this->outlets[] 			    = $outletDetails;
-				}				
+				}	
+
+				$outletDetails['outletName'] 	= $outletName;
+				$outletDetails['outletAddress']	= $formattedAddress;
+				$this->outlets[] 			    = $outletDetails;			
 			}
 		}
 
