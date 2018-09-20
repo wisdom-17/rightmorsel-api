@@ -38,10 +38,9 @@ class OutletRetrieveCommand extends ContainerAwareCommand
     {
 
         $io = new SymfonyStyle($input, $output);
-        
-        $url            = $input->getArgument('url');
-
-        $outlets            = $this->outletScraper->scrapeOutlets($url); // get outlets
+    
+        $url        = $input->getArgument('url');
+        $outlets    = $this->outletScraper->scrapeOutlets($url); // get outlets
 
         $abnormalFormatOutlets = $this->outletScraper->abnormalFormatOutlets;
 
