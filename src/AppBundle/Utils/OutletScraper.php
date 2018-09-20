@@ -36,6 +36,17 @@ class OutletScraper
 		$crawler = $goutteClient->request('GET', $url);
 		$crawler = $crawler->filterXPath('//div[@id="outlet_items"]/*');
 
+		// identify if certified or revoked
+		$certificationStatus = $crawler->filter('div.single-outlet-post')->each(function ($node) {
+			$div 	= $node->filter('div');
+			$class 	= $div->attr('class');
+
+			$pieces 	= explode(' ', $class);
+			$last_class = array_pop($pieces);
+
+			return $last_class;
+		});
+
 		// scrape names
 		$outletNames = $crawler->filter('article')->each(function ($node) {
 			return $node->filter('div.outlet-content div.outlet-title h3')->text();
@@ -47,7 +58,8 @@ class OutletScraper
 		});
 
 		foreach ($outletNames as $key => $outletName) {
-			$outletDetails 					= [];
+			$outletDetails 							= [];
+			$outletDetails['certificationStatus'] 	= $certificationStatus[$key];
 			$formattedAddress				= $this->parseAddress($outletAddresses[$key]);
 
 			if($formattedAddress == false){

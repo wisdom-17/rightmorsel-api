@@ -40,7 +40,6 @@ class OutletRetrieveCommand extends ContainerAwareCommand
         $io = new SymfonyStyle($input, $output);
         
         $url            = $input->getArgument('url');
-        // $outletScraper  = new OutletScraper($url, new Provider());
 
         $outlets            = $this->outletScraper->scrapeOutlets($url); // get outlets
 
@@ -60,8 +59,6 @@ class OutletRetrieveCommand extends ContainerAwareCommand
                 ]);
             }
         }
-
-        // $outletTableWriter = new OutletTableWriter();
         
         $savedOutletsCount = 0;
         foreach($outlets as $outletDetails){
