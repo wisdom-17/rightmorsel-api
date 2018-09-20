@@ -38,6 +38,14 @@ class OutletTableWriter
 	        return $response;
 		}
 
+		// if outlet exists, check its isActive against certification status
+		// if isActive == false && certification == revoked || isActive == true && certification == certified
+		// then return 422 response (outlet alreadye exists)
+		// else 
+		// if isActive == true and certification == revoked then we need to update
+		// outlet record by setting isActive == false
+		//
+
 		$outlet = new Outlet();
 		$outlet->setOutletName($outletName);
 		$outlet->setBuildingName($buildingName);
@@ -60,7 +68,7 @@ class OutletTableWriter
   		// $validator = $this->get('validator'); // validate constraints
     	$errors = $this->validator->validate($outlet);
     	if (count($errors) > 0) {
-			$response = new Response('', 422, array('content-type' => 'text/html'));
+			$response = new Response('Validation failed: ', 422, array('content-type' => 'text/html'));
 
 	        $errorsString = (string) $errors;
 	        $response->setContent($errorsString);

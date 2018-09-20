@@ -92,4 +92,9 @@ class OutletTableWriterTest extends TestCase
 
         $this->assertEquals(422, $response->getStatusCode());
     }
+
+    public function testUpdateExistingOutletCertification()
+    {
+        
+    }
 }
