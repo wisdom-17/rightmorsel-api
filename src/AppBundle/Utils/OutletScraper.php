@@ -41,10 +41,9 @@ class OutletScraper
 			$div 	= $node->filter('div');
 			$class 	= $div->attr('class');
 
-			$pieces 	= explode(' ', $class);
-			$last_class = array_pop($pieces);
+			$lastClass = $this->getCertificationStatus($class);
 
-			return $last_class;
+			return $lastClass;
 		});
 
 		// scrape names
@@ -89,9 +88,7 @@ class OutletScraper
 					}
 					
 					$this->outlets[] 			    = $outletDetails;
-				}
-
-				
+				}				
 			}
 		}
 
@@ -134,6 +131,14 @@ class OutletScraper
 		];
 
 		return $parsedOutletAddress;
+	}
+
+	private function getCertificationStatus($divClass)
+	{
+		$pieces 	= explode(' ', $divClass);
+		$lastClass 	= array_pop($pieces);
+
+		return $lastClass;
 	}
 
 	public function geocodeAddress($address)
