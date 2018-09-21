@@ -21,24 +21,34 @@ class OutletTableWriter
     }
 
 	// inserts outlet to db
-	public function insertOutlet($outletName, $buildingName = null, $propertyNumber, $streetName, $area, $town, $contactNumber, $postcode, $longitude = null, $latitude = null)
+	public function insertOutlet($outletName, $buildingName = null, $propertyNumber, $streetName, $area, $town, $contactNumber, $postcode, $longitude = null, $latitude = null, $certificationStatus)
 	{
 		// check if outlet exists already
-		$outletExists = ($this->em->getRepository('AppBundle\Entity\Outlet')->findOneBy(array(
+		$existingOutlet = $this->em->getRepository('AppBundle\Entity\Outlet')->findOneBy(array(
 				'outletName' 	=> $outletName,
 				'postCode'		=> $postcode
-			)) !== null ? true : false
+			)
 		);
 
+		if($existingOutlet !== null){
+			// check existing outlet's isActive against certification status
+			if($existingOutlet->getIsActive() == true && $certificationStatus == 'revoked'){
+				$existingOutlet->setIsActive(false);
 
-		if($outletExists === true){
-			$response = new Response('', 422, array('content-type' => 'text/html'));
+				$this->em->persist($existingOutlet);
+				$this->em->flush(); 
 
-	        $response->setContent('Outlet already exists');
+				$response = new Response('', 200, array('content-type' => 'text/html'));
+				$response->setContent('Outlet certification revoked, so deactivated outlet.');
+			}else{
+				$response = new Response('', 422, array('content-type' => 'text/html'));
+	        	$response->setContent('Outlet already exists');
+			}
+			
 	        return $response;
 		}
 
-		// if outlet exists, check its isActive against certification status
+		// if outlet exists, 
 		// if isActive == false && certification == revoked || isActive == true && certification == certified
 		// then return 422 response (outlet alreadye exists)
 		// else 

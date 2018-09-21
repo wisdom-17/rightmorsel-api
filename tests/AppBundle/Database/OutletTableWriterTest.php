@@ -38,7 +38,7 @@ class OutletTableWriterTest extends TestCase
 
         $outletTableWriter  = new OutletTableWriter($this->validator, $this->mockEm);
         $response           = $outletTableWriter->insertOutlet(
-            'Test Outlet', null, 32, 'Dawn Crescent', 'Stratford', 'London', null, 'E15 3NT'
+            'Test Outlet', null, 32, 'Dawn Crescent', 'Stratford', 'London', null, 'E15 3NT', null, null, 'certified'
         );
 
         $this->assertEquals(201, $response->getStatusCode());
@@ -61,7 +61,7 @@ class OutletTableWriterTest extends TestCase
 
         $outletTableWriter  = new OutletTableWriter($this->validator, $this->mockEm);
         $response           = $outletTableWriter->insertOutlet(
-            '','', '', '', '', '', '', 'EXX 1XX'
+            '','', '', '', '', '', '', 'EXX 1XX', null, null, ''
         );
 
         $this->assertEquals(422, $response->getStatusCode());
@@ -87,7 +87,7 @@ class OutletTableWriterTest extends TestCase
 
         $outletTableWriter  = new OutletTableWriter($this->validator, $this->mockEm);
         $response           = $outletTableWriter->insertOutlet(
-            'Test Outlet', null, '1', 'Test', 'Test', 'Test', null, 'E12 1AB'
+            'Test Outlet', null, '1', 'Test', 'Test', 'Test', null, 'E12 1AB', null, null, 'certified'
         );
 
         $this->assertEquals(422, $response->getStatusCode());
@@ -95,6 +95,28 @@ class OutletTableWriterTest extends TestCase
 
     public function testUpdateExistingOutletCertification()
     {
-        
+        $outlet = new Outlet();
+        $outlet->setOutletName('Test Outlet');
+        $outlet->setPostCode('E12 1AB');
+        $outlet->setIsActive(1);
+
+         // mock the repository so it returns the mock of the outlet
+        $outletRepository = $this->createMock(ObjectRepository::class);
+
+        $outletRepository->expects($this->any())
+            ->method('findOneBy')
+            ->willReturn($outlet);
+
+        // get the EntityManager to return the mock of the repository
+        $this->mockEm->expects($this->any())
+            ->method('getRepository')
+            ->willReturn($outletRepository);
+
+        $outletTableWriter  = new OutletTableWriter($this->validator, $this->mockEm);
+        $response           = $outletTableWriter->insertOutlet(
+            'Test Outlet', null, '1', 'Test', 'Test', 'Test', null, 'E12 1AB', null, null, 'revoked'
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
     }
 }

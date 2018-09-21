@@ -59,7 +59,8 @@ class OutletRetrieveCommand extends ContainerAwareCommand
             }
         }
         
-        $savedOutletsCount = 0;
+        $savedOutletsCount          = 0;
+        $deactivatedOutletsCount    = 0;
         foreach($outlets as $outletDetails){
             $outletName     = $outletDetails['outletName'];
             $outletAddress  = $outletDetails['outletAddress'];
@@ -79,12 +80,18 @@ class OutletRetrieveCommand extends ContainerAwareCommand
                 $outletAddress['contactNumber'], 
                 $outletAddress['postcode'],
                 $outletDetails['longitude'],
-                $outletDetails['latitude']
+                $outletDetails['latitude'],
+                $outletDetails['certificationStatus']
             ); 
 
+            $responseStatusCode = $response->getStatusCode();
+
             // if successful, increment count
-            if($response->getStatusCode() === 201){
+            if($responseStatusCode === 201){
                 $savedOutletsCount++;
+            }elseif($responseStatusCode === 200){
+                $deactivatedOutletsCount++;
+                // todo: print warning line saying outlet certification has been revoked
             }else{
                 $io->text('<error>Oulet could not be saved because: '.$response->getContent().'</>');
             }
@@ -92,6 +99,8 @@ class OutletRetrieveCommand extends ContainerAwareCommand
         }
 
         $io->success('Successfully saved '.$savedOutletsCount.' outlets');
+        $io->newLine(1);
+        $io->success('Successfully deactivated '.$deactivatedOutletsCount.' outlets');
     }
 
 }
