@@ -59,35 +59,6 @@ class OutletScraperTest extends TestCase
         $this->assertEquals($expectedAddress, $parsedOutletAddress);
     }
 
-    // commented out as geocoding is provided by another library
-    
-	/*public function testGeocodeAddress()
-    {
-        $mockGeocoder = $this->createMock(Provider::class);
-        $mockEm       = $this->createMock(EntityManagerInterface::class);
-
-        $coordinates = new Coordinates(-0.1143172, 51.3946472);
-
-        $addressCollection = new AddressCollection([$coordinates]);
-
-        $mockGeocoder->expects($this->any())
-            ->method('geocodeQuery')
-            ->willReturn($addressCollection);
-
-        $outletScraper = new OutletScraper($mockGeocoder, $mockEm);
-
-        $geocodedAddress = $outletScraper->geocodeAddress('770 London Road, Thornton Heath, London, CR7 6JB');
-
-        $this->assertEquals(array('-0.1143172','51.3946472'), $geocodedAddress);
-    }
-
-    public function testGeocodeInvalidAddress()
-    {
-        $geocodedAddress = $this->outletScraper->geocodeAddress('dcadcd');
-
-        $this->assertEquals(array(), $geocodedAddress);
-    }*/
-
     public function addressProvider()
     {
         return [
