@@ -91,7 +91,7 @@ class OutletRetrieveCommand extends ContainerAwareCommand
                 $savedOutletsCount++;
             }elseif($responseStatusCode === 200){
                 $deactivatedOutletsCount++;
-                // todo: print warning line saying outlet certification has been revoked
+                $io->note('Outlet certification has been revoked.');
             }else{
                 $io->text('<error>Oulet could not be saved because: '.$response->getContent().'</>');
             }
