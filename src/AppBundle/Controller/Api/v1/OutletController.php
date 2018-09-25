@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class OutletController extends Controller
 {
     /**
-     * @Route("/api/v1/outlet")
+     * @Route("/api/v1/outlet/new")
      * @Method("POST")
      */
     public function newAction(Request $request, OutletTableWriter $outletTableWriter) 
@@ -45,10 +45,32 @@ class OutletController extends Controller
 		    ->findOneBy(['id' => $id]);
 
 		$data = [
-	    	'outlet_name' => $outlet->getOutletName(),
-		    'post_code' => $outlet->getPostCode(),
+	    	'outletName' 		=> $outlet->getOutletName(),
+	    	'buildingName' 		=> $outlet->getBuildingName(),
+	    	'propertyNumber' 	=> $outlet->getPropertyNumber(),
+	    	'streetName' 		=> $outlet->getStreetName(),
+	    	'area' 				=> $outlet->getArea(),
+	    	'town' 				=> $outlet->getTown(),
+		    'postcode' 			=> $outlet->getPostCode(),
+		    'longitude' 		=> $outlet->getLongitude(),
+		    'latitude' 			=> $outlet->getLatitude(),
+	    	'contactNumber' 	=> $outlet->getContactNumber(),
+	    	'isActive' 			=> $outlet->getIsActive()
 	  	];
 
 		return new JsonResponse($data);
 	}
+
+	/**
+	 * @Route("/api/v1/outlets/nearest/{longitude}/{latitude}")
+	 * @Method("GET")
+	 *
+	 * @param $longitude
+	 * @param $latitude
+	 */
+	public function nearestAction($longitude, $latitude) 
+	{
+		return new JsonResponse([]);
+	}
+
 }

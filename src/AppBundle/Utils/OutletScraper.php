@@ -79,10 +79,8 @@ class OutletScraper
 					$address = $formattedAddress['propertyNumber'].' '.$formattedAddress['streetName'].', '.$formattedAddress['town'].', '.$formattedAddress['postcode'];
 					$coordinates = $this->geocodeAddress($address);
 
-					if(count($coordinates) > 0){
-						$outletDetails['longitude']		= $coordinates[0];
-						$outletDetails['latitude']		= $coordinates[1];
-					}
+					$outletDetails['longitude']		= $coordinates['longitude'];
+					$outletDetails['latitude']		= $coordinates['latitude'];
 				}	
 
 				$outletDetails['outletName'] 	= $outletName;
@@ -142,7 +140,7 @@ class OutletScraper
 
 	public function geocodeAddress($address)
 	{
-		$coordinates 		= [];
+		$coordinates 		= ['longitude' => null, 'latitude' => null];
 		$addressCollection 	= $this->geocoder->geocodeQuery(GeocodeQuery::create($address));
 
 		if($addressCollection->count() > 0){
