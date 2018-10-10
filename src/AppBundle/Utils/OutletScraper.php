@@ -68,20 +68,27 @@ class OutletScraper
 				$this->abnormalFormatOutlets[$outletName] = $outletAddresses[$key];
 			}else{
 				// check that outlet does not exist in our db
-				$outletExists = ($this->em->getRepository('AppBundle\Entity\Outlet')->findOneBy(array(
+				$existingOutlet = $this->em->getRepository('AppBundle\Entity\Outlet')->findOneBy(array(
 						'outletName' 	=> $outletName,
-						'postCode'		=> $formattedAddress['postcode']
-					)) !== null ? true : false
-				);
+						'postCode'		=> $formattedAddress['postcode'],
+					));
 
-				if($outletExists === false){
-					// geo code outlet
-					$address = $formattedAddress['propertyNumber'].' '.$formattedAddress['streetName'].', '.$formattedAddress['town'].', '.$formattedAddress['postcode'];
+				$outletExists 	= $existingOutlet !== null ? true : false;
+				$needsGeocoding = false;		
+				if($outletExists === true){
+					// check if there valid lat and lon data for outlet (if it exists)
+					$needsGeocoding = ($existingOutlet->getLongitude() == null || $existingOutlet->getLatitude() == null) ? true : false;
+				}
+
+				$address = $formattedAddress['propertyNumber'].' '.$formattedAddress['streetName'].', '.$formattedAddress['town'].', '.$formattedAddress['postcode'];	
+
+				// geocode (if needed)
+				if($needsGeocoding == true || $outletExists === false){
 					$coordinates = $this->geocodeAddress($address);
 
 					$outletDetails['longitude']		= $coordinates['longitude'];
 					$outletDetails['latitude']		= $coordinates['latitude'];
-				}	
+				}
 
 				$outletDetails['outletName'] 	= $outletName;
 				$outletDetails['outletAddress']	= $formattedAddress;
@@ -144,8 +151,11 @@ class OutletScraper
 		$addressCollection 	= $this->geocoder->geocodeQuery(GeocodeQuery::create($address));
 
 		if($addressCollection->count() > 0){
-			$address 			= $addressCollection->first();
-			$coordinates 		= $address->getCoordinates()->toArray();	
+			$address 				= $addressCollection->first();
+			$coordinatesResultArray = $address->getCoordinates()->toArray();
+			
+			$coordinates['longitude'] 		= $coordinatesResultArray[0];	
+			$coordinates['latitude'] 		= $coordinatesResultArray[1];	
 		}
 		
 		return $coordinates;

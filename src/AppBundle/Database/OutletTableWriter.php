@@ -40,32 +40,29 @@ class OutletTableWriter
 
 				$response = new Response('', 200, array('content-type' => 'text/html'));
 				$response->setContent('Outlet certification revoked, so deactivated outlet.');
+
+				return $response;
+			}elseif($existingOutlet->getLongitude() == null || $existingOutlet->getLatitude() == null){
+				$outlet = $existingOutlet;
 			}else{
 				$response = new Response('', 422, array('content-type' => 'text/html'));
 	        	$response->setContent('Outlet already exists');
+
+	        	return $response;
 			}
-			
-	        return $response;
+		}else{
+			$outlet = new Outlet();
+			$outlet->setOutletName($outletName);
+			$outlet->setBuildingName($buildingName);
+			$outlet->setPropertyNumber($propertyNumber);
+			$outlet->setStreetName($streetName);
+			$outlet->setArea($area);
+			$outlet->setTown($town);
+			$outlet->setContactNumber($contactNumber);
+			$outlet->setPostCode($postcode);
+
 		}
-
-		// if outlet exists, 
-		// if isActive == false && certification == revoked || isActive == true && certification == certified
-		// then return 422 response (outlet alreadye exists)
-		// else 
-		// if isActive == true and certification == revoked then we need to update
-		// outlet record by setting isActive == false
-		//
-
-		$outlet = new Outlet();
-		$outlet->setOutletName($outletName);
-		$outlet->setBuildingName($buildingName);
-		$outlet->setPropertyNumber($propertyNumber);
-		$outlet->setStreetName($streetName);
-		$outlet->setArea($area);
-		$outlet->setTown($town);
-		$outlet->setContactNumber($contactNumber);
-		$outlet->setPostCode($postcode);
-
+		
 		if($longitude !== null){
 			$outlet->setLongitude($longitude);
 		}

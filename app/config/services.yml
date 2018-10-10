@@ -38,3 +38,6 @@ services:
         shared: false
         arguments:
             $geocoder: '@bazinga_geocoder.provider.acme'
+    AppBundle\Doctrine\Fixtures\:
+        resource: '../../src/AppBundle/Doctrine/Fixtures'
+        tags: ['doctrine.fixture.orm']

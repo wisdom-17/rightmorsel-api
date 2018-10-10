@@ -17,7 +17,9 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new AppBundle\AppBundle(),
-            new Bazinga\GeocoderBundle\BazingaGeocoderBundle()
+            new Bazinga\GeocoderBundle\BazingaGeocoderBundle(),
+            new Craue\GeoBundle\CraueGeoBundle(),
+            new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle()
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
