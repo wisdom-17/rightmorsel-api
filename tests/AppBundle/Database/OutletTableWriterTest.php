@@ -71,7 +71,7 @@ class OutletTableWriterTest extends TestCase
     {
         $outlet = new Outlet();
         $outlet->setOutletName('Test Outlet');
-        $outlet->setPostCode('E12 5AB');
+        $outlet->setPostcode('E12 5AB');
         $outlet->setLatitude('51.551258');
         $outlet->setLongitude('0.045479');
         $outlet->setIsActive(1);
@@ -100,7 +100,7 @@ class OutletTableWriterTest extends TestCase
     {
         $outlet = new Outlet();
         $outlet->setOutletName('Test Outlet');
-        $outlet->setPostCode('E12 1AB');
+        $outlet->setPostcode('E12 1AB');
         $outlet->setIsActive(1);
 
          // mock the repository so it returns the mock of the outlet

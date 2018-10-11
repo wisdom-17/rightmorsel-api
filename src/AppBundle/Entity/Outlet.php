@@ -66,9 +66,16 @@ class Outlet
     /**
      * @var string
      * @Assert\NotBlank()
-     * @ORM\Column(name="post_code", type="string", length=30)
+     * @ORM\Column(name="postcode", type="string", length=30)
      */
-    private $postCode;
+    private $postcode;
+
+    /**
+     * @var string
+     * @Assert\NotBlank()
+     * @ORM\Column(name="country", type="string", length=200)
+     */
+    private $country;  
 
     /**
      * @var string
@@ -133,27 +140,27 @@ class Outlet
     }
 
     /**
-     * Set postCode
+     * Set postcode
      *
-     * @param string $postCode
+     * @param string $postcode
      *
      * @return Outlet
      */
-    public function setPostCode($postCode)
+    public function setPostCode($postcode)
     {
-        $this->postCode = $postCode;
+        $this->postcode = $postcode;
 
         return $this;
     }
 
     /**
-     * Get postCode
+     * Get postcode
      *
      * @return string
      */
     public function getPostCode()
     {
-        return $this->postCode;
+        return $this->postcode;
     }
 
     /**
@@ -274,6 +281,30 @@ class Outlet
     public function getTown()
     {
         return $this->town;
+    }
+
+    /**
+     * Set country
+     *
+     * @param string $country
+     *
+     * @return Outlet
+     */
+    public function setCountry($country)
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    /**
+     * Get country
+     *
+     * @return string
+     */
+    public function getCountry()
+    {
+        return $this->country;
     }
 
     /**

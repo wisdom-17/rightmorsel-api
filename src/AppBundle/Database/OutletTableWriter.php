@@ -26,7 +26,7 @@ class OutletTableWriter
 		// check if outlet exists already
 		$existingOutlet = $this->em->getRepository('AppBundle\Entity\Outlet')->findOneBy(array(
 				'outletName' 	=> $outletName,
-				'postCode'		=> $postcode
+				'postcode'		=> $postcode
 			)
 		);
 
@@ -72,6 +72,7 @@ class OutletTableWriter
 			$outlet->setTown($town);
 			$outlet->setContactNumber($contactNumber);
 			$outlet->setPostCode($postcode);
+			$outlet->setCountry('England');
 			$outlet->setIsActive(0);
 
 			if($longitude !== null){
