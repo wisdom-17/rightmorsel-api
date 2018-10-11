@@ -30,27 +30,39 @@ class OutletTableWriter
 			)
 		);
 
-		if($existingOutlet !== null){
-			// check existing outlet's isActive against certification status
-			if($existingOutlet->getIsActive() == true && $certificationStatus == 'revoked'){
-				$existingOutlet->setIsActive(false);
+		$operationType = $this->determineOperationType($existingOutlet, $certificationStatus);
 
-				$this->em->persist($existingOutlet);
-				$this->em->flush(); 
+		if($operationType == 'certification_revoked'){
+			$existingOutlet->setIsActive(false);
 
-				$response = new Response('', 200, array('content-type' => 'text/html'));
-				$response->setContent('Outlet certification revoked, so deactivated outlet.');
+			$this->em->persist($existingOutlet);
+			$this->em->flush(); // update
 
-				return $response;
-			}elseif($existingOutlet->getLongitude() == null || $existingOutlet->getLatitude() == null){
-				$outlet = $existingOutlet;
-			}else{
-				$response = new Response('', 422, array('content-type' => 'text/html'));
-	        	$response->setContent('Outlet already exists');
+			$response = new Response('', 200, array('content-type' => 'text/html'));
+			$response->setContent('Deactivated, revoked certification.');
+		}
 
-	        	return $response;
+		if($operationType == 'geodata_needs_updating'){
+			if($longitude !== null){
+				$existingOutlet->setLongitude($longitude);
 			}
-		}else{
+			if($latitude !== null){
+				$existingOutlet->setLatitude($latitude);	
+			}
+
+			$this->em->persist($existingOutlet);
+			$this->em->flush(); // update
+
+			$response = new Response('', 200, array('content-type' => 'text/html'));
+			$response->setContent('Geodata updated.');
+		}
+
+		if($operationType == 'existing_outlet_no_changes'){
+			$response = new Response('', 422, array('content-type' => 'text/html'));
+        	$response->setContent('Outlet exists.');
+		}
+
+		if($operationType == 'new_outlet'){
 			$outlet = new Outlet();
 			$outlet->setOutletName($outletName);
 			$outlet->setBuildingName($buildingName);
@@ -60,31 +72,47 @@ class OutletTableWriter
 			$outlet->setTown($town);
 			$outlet->setContactNumber($contactNumber);
 			$outlet->setPostCode($postcode);
+			$outlet->setIsActive(0);
 
-		}
-		
-		if($longitude !== null){
-			$outlet->setLongitude($longitude);
-		}
-		if($latitude !== null){
-			$outlet->setLatitude($latitude);	
-		}
+			if($longitude !== null){
+				$outlet->setLongitude($longitude);
+			}
+			if($latitude !== null){
+				$outlet->setLatitude($latitude);	
+			}
 	
-		$outlet->setIsActive(0);
+			// validate constraints
+	    	$errors = $this->validator->validate($outlet);
+	    	if (count($errors) > 0) {
+				$response = new Response('Validation failed: ', 422, array('content-type' => 'text/html'));
 
-  		// $validator = $this->get('validator'); // validate constraints
-    	$errors = $this->validator->validate($outlet);
-    	if (count($errors) > 0) {
-			$response = new Response('Validation failed: ', 422, array('content-type' => 'text/html'));
+		        $errorsString = (string) $errors;
+		        $response->setContent($errorsString);
+		    }else{
+		    	$response = new Response('Outlet #'.$outlet->getId().' has been successfully saved.', 201);
+		    }			
+		}
 
-	        $errorsString = (string) $errors;
-	        $response->setContent($errorsString);
-	        return $response;
-	    }
+		return $response;
+	}
 
-		$this->em->persist($outlet);
-		$this->em->flush(); // save
+	private function determineOperationType($existingOutlet, $certificationStatus){
+		$operationType = 'new_outlet';
 
- 		return new Response('Outlet #'.$outlet->getId().' has been successfully saved.', 201);
+		if($existingOutlet !== null){
+			if($existingOutlet->getIsActive() == true && $certificationStatus == 'revoked'){
+				$operationType = 'certification_revoked';
+				return $operationType;
+			}
+
+			if($existingOutlet->getLongitude() == null || $existingOutlet->getLatitude() == null){
+				$operationType = 'geodata_needs_updating';
+			}else{
+				$operationType = 'existing_outlet_no_changes';
+			}
+		}else{
+			$operationType = 'new_outlet';
+		}
+		return $operationType;
 	}
 }

@@ -67,11 +67,14 @@ class OutletTableWriterTest extends TestCase
         $this->assertEquals(422, $response->getStatusCode());
     }
 
-    public function testExistingOuletInsert()
+    public function testExistingOutletInsert()
     {
         $outlet = new Outlet();
         $outlet->setOutletName('Test Outlet');
-        $outlet->setPostCode('E12 1AB');
+        $outlet->setPostCode('E12 5AB');
+        $outlet->setLatitude('51.551258');
+        $outlet->setLongitude('0.045479');
+        $outlet->setIsActive(1);
 
         // mock the repository so it returns the mock of the outlet
         $outletRepository = $this->createMock(ObjectRepository::class);
