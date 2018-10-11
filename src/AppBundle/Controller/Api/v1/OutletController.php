@@ -70,6 +70,35 @@ class OutletController extends Controller
 	 */
 	public function nearestAction($longitude, $latitude) 
 	{
+
+		$postcode 	= 'E7 8AL';
+		$radiusInKm = 5;
+		$country 	= 'England';
+
+		// create a query builder
+		$queryBuilder = $this->getDoctrine()
+			->getRepository('AppBundle:Outlet')
+			->createQueryBuilder('outlet');
+
+		// build the query
+		$queryBuilder
+			->select('outlet, GEO_DISTANCE(:latitude, :longitude, outlet.latitude, outlet.longitude) AS distance')
+			->having('distance <= :radius')
+			->setParameter('latitude', $latitude)
+			->setParameter('longitude', $longitude)
+			->setParameter('radius', $radiusInKm)
+			->orderBy('distance')
+			->setMaxResults(10);
+
+		$query = $queryBuilder->getQuery();
+
+		// var_dump($query);
+
+		$result = $query->getResult();
+
+		var_dump($result);
+
+
 		return new JsonResponse([]);
 	}
 
