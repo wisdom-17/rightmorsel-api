@@ -67,23 +67,10 @@ class OutletScraper
 			if($formattedAddress == false){
 				$this->abnormalFormatOutlets[$outletName] = $outletAddresses[$key];
 			}else{
-				// check that outlet does not exist in our db
-				$existingOutlet = $this->em->getRepository('AppBundle\Entity\Outlet')->findOneBy(array(
-						'outletName' 	=> $outletName,
-						'postCode'		=> $formattedAddress['postcode'],
-					));
-
-				$outletExists 	= $existingOutlet !== null ? true : false;
-				$needsGeocoding = false;		
-				if($outletExists === true){
-					// check if there valid lat and lon data for outlet (if it exists)
-					$needsGeocoding = ($existingOutlet->getLongitude() == null || $existingOutlet->getLatitude() == null) ? true : false;
-				}
-
 				$address = $formattedAddress['propertyNumber'].' '.$formattedAddress['streetName'].', '.$formattedAddress['town'].', '.$formattedAddress['postcode'];	
 
 				// geocode (if needed)
-				if($needsGeocoding == true || $outletExists === false){
+				if($this->needsGeocoding($outletName, $formattedAddress['postcode']) == true){
 					$coordinates = $this->geocodeAddress($address);
 
 					$outletDetails['longitude']		= $coordinates['longitude'];
@@ -159,5 +146,27 @@ class OutletScraper
 		}
 		
 		return $coordinates;
+	}
+
+	/*
+	 *
+	 * Determines if outlet address needs to be geocoded 
+	 * i.e. new outlets or existing outlets with no geo data
+ 	 *
+	 */ 
+	private function needsGeocoding($outletName, $postcode)
+	{
+		// check if outlet exists in db
+		$existingOutlet = $this->em->getRepository('AppBundle\Entity\Outlet')->findOneBy(array(
+				'outletName' 	=> $outletName,
+				'postCode'		=> $postcode,
+			));
+
+		if($existingOutlet !==  null){
+			return (($existingOutlet->getLongitude() == null || $existingOutlet->getLatitude()) == null) ? true : false;
+
+		}else{
+			return true;
+		}
 	}
 }
