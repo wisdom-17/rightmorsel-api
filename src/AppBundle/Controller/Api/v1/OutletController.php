@@ -10,6 +10,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class OutletController extends Controller
 {
@@ -92,14 +95,18 @@ class OutletController extends Controller
 
 		$query = $queryBuilder->getQuery();
 
-		// var_dump($query);
-
 		$result = $query->getResult();
 
-		var_dump($result);
+		$encoders = array(new JsonEncoder());
+		$normalizers = array(new ObjectNormalizer());
 
+		$serializer = new Serializer($normalizers, $encoders);
 
-		return new JsonResponse([]);
+		$jsonResult = $serializer->serialize($result, 'json');
+
+		$response = JsonResponse::fromJsonString($jsonResult);
+
+		return $response;
 	}
 
 }
