@@ -36,6 +36,8 @@ PHPUnit tests can be run by the following command:
 * [Symfony](https://symfony.com/doc/3.4//index.html) The web framework used.
 * [Doctrine](https://www.doctrine-project.org/projects/doctrine-orm/en/2.5/index.html) ORM layer.
 * [Gouette](https://github.com/FriendsOfPHP/Goutte) Used to retrieve outlets from HMC websites.
+* [BazingaGeocoderBundle](https://github.com/geocoder-php/BazingaGeocoderBundle) Used to Geocode postcodes.
+* [CraueGeoBundle](https://github.com/craue/CraueGeoBundle) Used to calculate distance between postcodes or geocodes.
 
 ## Author
 Saeed Bhuta
