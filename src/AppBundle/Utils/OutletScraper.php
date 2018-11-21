@@ -159,7 +159,7 @@ class OutletScraper
 		// check if outlet exists in db
 		$existingOutlet = $this->em->getRepository('AppBundle\Entity\Outlet')->findOneBy(array(
 				'outletName' 	=> $outletName,
-				'postCode'		=> $postcode,
+				'postcode'		=> $postcode,
 			));
 
 		if($existingOutlet !==  null){

@@ -32,6 +32,9 @@ PHPUnit tests can be run by the following command:
 ./vendor/bin/simple-phpunit
 ```
 
+## Endpoints
+* /api/v1/outlets/nearest/{longitude}/{latitude} - (GET request) Returns the nearest outlets to a given geocode
+
 ## Built with
 * [Symfony](https://symfony.com/doc/3.4//index.html) The web framework used.
 * [Doctrine](https://www.doctrine-project.org/projects/doctrine-orm/en/2.5/index.html) ORM layer.
