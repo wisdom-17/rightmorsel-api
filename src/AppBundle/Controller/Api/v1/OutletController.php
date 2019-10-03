@@ -74,7 +74,6 @@ class OutletController extends Controller
 	public function nearestAction($longitude, $latitude) 
 	{
 
-		$postcode 	= 'E7 8AL';
 		$radiusInKm = 5;
 		$country 	= 'England';
 
@@ -101,9 +100,7 @@ class OutletController extends Controller
 		$normalizers = array(new ObjectNormalizer());
 
 		$serializer = new Serializer($normalizers, $encoders);
-
 		$jsonResult = $serializer->serialize($result, 'json');
-
 		$response = JsonResponse::fromJsonString($jsonResult);
 
 		return $response;
