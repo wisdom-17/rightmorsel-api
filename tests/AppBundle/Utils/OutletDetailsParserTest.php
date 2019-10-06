@@ -26,6 +26,16 @@ class OutletDetailsParserTest extends TestCase
         $this->assertEquals($expectedAddress, $parsedOutletAddress);
     }
 
+    /**
+     * @dataProvider telephoneProvider
+     */
+    public function testParseTelephone($outletDetails, $expectedTelephoneNumber)
+    {
+        $parsedTelephoneNumber = $this->outletDetailsParser->parseTelephone($outletDetails);
+
+        $this->assertEquals($expectedTelephoneNumber, $parsedTelephoneNumber);
+    }
+
     public function addressProvider()
     {
         return [
@@ -44,10 +54,14 @@ class OutletDetailsParserTest extends TestCase
                     'postcode'          => 'E1 6TD',
                 ]
             ],
-            // ['
-            //                 Unit 35, East Shopping Centre, 232 - 236 Green Street, Forest Gate, London, London, E7 8LE   020 3598 5462                      ',
-            //     false
-            // ],
+            ['
+							Kiosk 32, Unit C 399 Edgware Road, Colindale, London, London, NW9 0FH					
+							
+                            Tel: 07438 935891	
+
+            ',
+                false
+            ],
             ['
             115 New Road, Whitechapel, London, London, E1 1HJ							
                                     ',
@@ -59,6 +73,37 @@ class OutletDetailsParserTest extends TestCase
                     'town'              => 'London',
                     'postcode'          => 'E1 1HJ',
                 ]
+            ]
+        ];
+    }
+
+    public function telephoneProvider()
+    {
+        return [
+            ['
+            28 Osborn Street, Whitechapel, London, London, E1 6TD							
+            
+                                                    Tel: 020 7247 0073	
+                
+                                    ', 
+                
+            '020 7247 0073'
+                
+            ],
+            ['
+							Kiosk 32, Unit C 399 Edgware Road, Colindale, London, London, NW9 0FH					
+							
+                            Tel: 07438 935891	
+
+            ',
+                '07438 935891'
+            ],
+            ['
+            115 New Road, Whitechapel, London, London, E1 1HJ							
+                                    ',
+                
+                null
+                
             ]
         ];
     }

@@ -43,8 +43,14 @@ class OutletDetailsParser
 		return $parsedOutletAddress;
     }
 
-    public function parseTelephone($node)
+    public function parseTelephone($outletDetails)
     {
-
+        $telephoneStringPosition = strpos($outletDetails, 'Tel:');
+        if($telephoneStringPosition === false){
+            return null;
+        }else{
+            $telephone = substr($outletDetails, $telephoneStringPosition+5);
+            return trim($telephone);
+        }
     }
 }
