@@ -44,20 +44,9 @@ class OutletRetrieveCommand extends ContainerAwareCommand
 
         $abnormalFormatOutlets = $this->outletScraper->abnormalFormatOutlets;
 
-        // highlight outlets which will not be saved automatically
-        if(count($abnormalFormatOutlets) > 0){
-            $io->text([
-                'The following outlets could not be parsed reliably: ',
-                '',
-            ]);
-
-            foreach ($abnormalFormatOutlets as $outletName => $outletAddress) {
-                $io->text([
-                    $outletName,
-                    $outletAddress,
-                ]);
-            }
-        }
+        // var_dump(count($outlets));
+        // var_dump(count($abnormalFormatOutlets));
+        // die;
         
         $savedOutletsCount          = 0;
         $deactivatedOutletsCount    = 0;
@@ -65,20 +54,21 @@ class OutletRetrieveCommand extends ContainerAwareCommand
         $alreadyExistsCount         = 0;
         foreach($outlets as $outletDetails){
             $outletName     = $outletDetails['outletName'];
-            $outletAddress  = $outletDetails['outletAddress'];
+            $outletAddress  = $outletDetails['address'];
 
             $io->text([
                 'Processing: '.$outletName
             ]);
 
-            $response = $this->outletTableWriter->insertOutlet( // save each outlet
+            // save each outlet
+            $response = $this->outletTableWriter->insertOutlet( 
                 $outletName, 
                 $outletAddress['buildingName'], 
                 $outletAddress['propertyNumber'], 
                 $outletAddress['streetName'], 
                 $outletAddress['area'], 
                 $outletAddress['town'], 
-                $outletAddress['contactNumber'], 
+                $outletDetails['telephoneNumber'], 
                 $outletAddress['postcode'],
                 $outletDetails['longitude'],
                 $outletDetails['latitude'],
@@ -91,34 +81,59 @@ class OutletRetrieveCommand extends ContainerAwareCommand
             // if successful, increment count
             if($responseStatusCode === 201){
                 $savedOutletsCount++;
+                $io->note('New outlet, saved to our system.');
             }elseif($responseStatusCode === 200){
                 if($responseContent == 'Deactivated, revoked certification.'){
                     $deactivatedOutletsCount++;
                     $io->note('Outlet certification has been revoked.');
-                }
-                if($responseContent == 'Geodata updated.'){
+                }elseif($responseContent == 'Geodata updated.'){
                     $updatedGeodataCount++;
                     $io->note('Outlet geodata has been updated.');
                 }                
-            }else{
+            }elseif($responseStatusCode === 422){
                 if($responseContent == 'Outlet exists.'){
                     $alreadyExistsCount++;
                     $io->note('Outlet already exists.');
-                }else{
-                    $io->text('<error>Oulet could not be saved because: '.$response->getContent().'</>');
                 }
             }
             $io->newLine(1);
         }
 
-        $io->success('Successfully saved '.$savedOutletsCount.' NEW outlet(s)');
-        $io->newLine(1);
-        $io->success('Successfully DEACTIVATED '.$deactivatedOutletsCount.' outlet(s)');
-        $io->newLine(1);
-        $io->success('Successfully UPDATED geodata for '.$updatedGeodataCount.' outlet(s)');
-        $io->newLine(1);
-        $io->success($alreadyExistsCount.' outlet(s) already exist in the system.');
+        if($savedOutletsCount > 0){
+            $io->success('Successfully saved '.$savedOutletsCount.' NEW outlet(s)');
+            $io->newLine(1);
+        }
 
+        if($deactivatedOutletsCount > 0){
+            $io->success('Successfully DEACTIVATED '.$deactivatedOutletsCount.' outlet(s)');
+            $io->newLine(1);
+        }
+
+        if($updatedGeodataCount > 0){
+            $io->success('Successfully UPDATED geodata for '.$updatedGeodataCount.' outlet(s)');
+            $io->newLine(1);
+        }
+
+        if($alreadyExistsCount > 0){
+            $io->success($alreadyExistsCount.' outlet(s) already exist in the system.');
+        }
+
+        // highlight outlets which will not be saved automatically
+        if(count($abnormalFormatOutlets) > 0){
+            $io->text([
+                'The following outlets could not be parsed reliably: ',
+                '',
+            ]);
+        
+            foreach ($abnormalFormatOutlets as $outletName => $outletAddress) {
+                $io->text([
+                    trim($outletName),
+                    // regex to replace multiple spaces within text with one space
+                    trim(preg_replace('!\s+!', ' ', $outletAddress)),
+                    ''
+                ]);
+            }
+        }
     }
 
 }
