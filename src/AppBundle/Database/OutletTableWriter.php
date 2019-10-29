@@ -23,6 +23,7 @@ class OutletTableWriter
 	// inserts outlet to db
 	public function insertOutlet($outletName, $buildingName = null, $propertyNumber, $streetName, $area, $town, $contactNumber, $postcode, $longitude = null, $latitude = null, $certificationStatus)
 	{
+
 		// check if outlet exists already
 		$existingOutlet = $this->em->getRepository('AppBundle\Entity\Outlet')->findOneBy(array(
 				'outletName' 	=> $outletName,
@@ -40,9 +41,7 @@ class OutletTableWriter
 
 			$response = new Response('', 200, array('content-type' => 'text/html'));
 			$response->setContent('Deactivated, revoked certification.');
-		}
-
-		if($operationType == 'geodata_needs_updating'){
+		}elseif($operationType == 'geodata_needs_updating'){
 			if($longitude !== null){
 				$existingOutlet->setLongitude($longitude);
 			}
@@ -55,14 +54,10 @@ class OutletTableWriter
 
 			$response = new Response('', 200, array('content-type' => 'text/html'));
 			$response->setContent('Geodata updated.');
-		}
-
-		if($operationType == 'existing_outlet_no_changes'){
+		}elseif($operationType == 'existing_outlet_no_changes'){
 			$response = new Response('', 422, array('content-type' => 'text/html'));
         	$response->setContent('Outlet exists.');
-		}
-
-		if($operationType == 'new_outlet'){
+		}elseif($operationType == 'new_outlet'){		
 			$outlet = new Outlet();
 			$outlet->setOutletName($outletName);
 			$outlet->setBuildingName($buildingName);
@@ -90,6 +85,9 @@ class OutletTableWriter
 		        $errorsString = (string) $errors;
 		        $response->setContent($errorsString);
 		    }else{
+				$this->em->persist($outlet);
+				$this->em->flush(); // insert
+
 		    	$response = new Response('Outlet #'.$outlet->getId().' has been successfully saved.', 201);
 		    }			
 		}
@@ -98,8 +96,6 @@ class OutletTableWriter
 	}
 
 	private function determineOperationType($existingOutlet, $certificationStatus){
-		$operationType = 'new_outlet';
-
 		if($existingOutlet !== null){
 			if($existingOutlet->getIsActive() == true && $certificationStatus == 'revoked'){
 				$operationType = 'certification_revoked';

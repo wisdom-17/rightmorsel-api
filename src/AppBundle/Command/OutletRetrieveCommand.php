@@ -43,10 +43,6 @@ class OutletRetrieveCommand extends ContainerAwareCommand
         $outlets    = $this->outletScraper->scrapeOutlets($url); // get outlets
 
         $abnormalFormatOutlets = $this->outletScraper->abnormalFormatOutlets;
-
-        // var_dump(count($outlets));
-        // var_dump(count($abnormalFormatOutlets));
-        // die;
         
         $savedOutletsCount          = 0;
         $deactivatedOutletsCount    = 0;
