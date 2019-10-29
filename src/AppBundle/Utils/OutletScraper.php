@@ -7,6 +7,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use Geocoder\Provider\Provider;
 use Geocoder\Query\GeocodeQuery;
 use Doctrine\ORM\EntityManagerInterface;
+use AppBundle\Utils\OutletDetailsParser;
 
 class OutletScraper
 {
@@ -36,52 +37,52 @@ class OutletScraper
 		$crawler = $goutteClient->request('GET', $url);
 		$crawler = $crawler->filterXPath('//div[@id="outlet_items"]/*');
 
-		// identify if certified or revoked
-		$certificationStatus = $crawler->filter('div.single-outlet-post')->each(function ($node) {
+		// scrape details for each outlet
+		$outletDetails = $crawler->filter('div.single-outlet-post')->each(function ($node) {
 			$div 	= $node->filter('div');
 			$class 	= $div->attr('class');
 
-			$lastClass = $this->getCertificationStatus($class);
+			// get outlet name
+			$outletName = $node->filter('div.outlet-content div.outlet-title h3')->text();
 
-			return $lastClass;
-		});
+			// get address
+			$address 	= $node->filter('div.outlet-content p.outlet-address')->text();
 
-		// scrape names
-		$outletNames = $crawler->filter('article')->each(function ($node) {
-			return $node->filter('div.outlet-content div.outlet-title h3')->text();
-		});
-
-		// scrape address
-		$outletAddresses = $crawler->filter('article')->each(function ($node) {
-			return $node->filter('div.outlet-content p.outlet-address')->text();
-		});
-
-		foreach ($outletNames as $key => $outletName) {
-			$outletDetails 							= [];
-			$outletDetails['certificationStatus'] 	= $certificationStatus[$key];
-			$outletDetails['longitude']				= null;
-			$outletDetails['latitude']				= null;
-			
-			$formattedAddress				= $this->parseAddress($outletAddresses[$key]);
-
-			if($formattedAddress == false){
-				$this->abnormalFormatOutlets[$outletName] = $outletAddresses[$key];
+			$outletDetailsParser 	= new OutletDetailsParser();
+			$parsedAddress 			= $outletDetailsParser->parseAddress($address);
+			if($parsedAddress === false){
+				// we are dealing with an unfamiliar format
+				$this->abnormalFormatOutlets[$outletName] = $address;
+				return;
 			}else{
-				$address = $formattedAddress['propertyNumber'].' '.$formattedAddress['streetName'].', '.$formattedAddress['town'].', '.$formattedAddress['postcode'];	
+				// parse certification status
+				$certificationStatus = $outletDetailsParser->parseCertificationStatus($class);
+
+				// parse telephone number
+				$telephone 		= $outletDetailsParser->parseTelephone($address);
+
+				$outletArray 	= array(
+					'outletName' 			=> $outletName,
+					'certificationStatus' 	=> $certificationStatus,
+					'address' 				=> $parsedAddress,
+					'telephoneNumber'		=> $telephone,
+					'longitude'				=> null,
+					'latitude'				=> null
+				);
 
 				// geocode (if needed)
-				if($this->needsGeocoding($outletName, $formattedAddress['postcode']) == true){
-					$coordinates = $this->geocodeAddress($address);
+				if($this->needsGeocoding($outletName, $parsedAddress['postcode']) == true){
+					$coordinates = $this->geocodeAddress($parsedAddress['propertyNumber'].' '.$parsedAddress['streetName'].', '.$parsedAddress['town'].', '.$parsedAddress['postcode']);
 
-					$outletDetails['longitude']		= $coordinates['longitude'];
-					$outletDetails['latitude']		= $coordinates['latitude'];
+					$outletArray['longitude']		= $coordinates['longitude'];
+					$outletArray['latitude']		= $coordinates['latitude'];
 				}
+				
+				$this->outlets[] = $outletArray;
 
-				$outletDetails['outletName'] 	= $outletName;
-				$outletDetails['outletAddress']	= $formattedAddress;
-				$this->outlets[] 			    = $outletDetails;			
-			}
-		}
+				return $outletArray;
+			}			
+		});
 
 		return $this->outlets;
 	}
@@ -106,11 +107,11 @@ class OutletScraper
 		$area 			= trim($outletAddressArray[1]); // extract area
 		$town			= trim($outletAddressArray[2]); //extract town
 	
-		$postcodeTelephoneArray = explode('   ',end($outletAddressArray));
-		$postcode 				= trim($postcodeTelephoneArray[0]);		// extract postcode
-		$telephone 				= trim($postcodeTelephoneArray[1]);		// extract telephone
-		$telephone 				= ($telephone == '-') ? null : $telephone;
+		$postcodeTelephoneArray = $this->parsePostcodeAndTelephone($outletAddressArray);
 
+		$postcode 	= $postcodeTelephoneArray[0];
+		$telephone 	= $postcodeTelephoneArray[1];
+		
 		$parsedOutletAddress = [
 			'buildingName'			=> null,
 			'propertyNumber' 		=> trim($propertyNumber),
@@ -122,14 +123,6 @@ class OutletScraper
 		];
 
 		return $parsedOutletAddress;
-	}
-
-	private function getCertificationStatus($divClass)
-	{
-		$pieces 	= explode(' ', $divClass);
-		$lastClass 	= array_pop($pieces);
-
-		return $lastClass;
 	}
 
 	public function geocodeAddress($address)

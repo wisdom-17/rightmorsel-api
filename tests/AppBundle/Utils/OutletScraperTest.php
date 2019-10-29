@@ -44,20 +44,21 @@ class OutletScraperTest extends TestCase
     {
     	$outlets 	= $this->outletScraper->scrapeOutlets('http://127.0.0.1:8000/test-webpage/test.html');
 
-    	$this->assertCount(210, $outlets);
+    	$this->assertCount(186, $outlets);
     	$this->assertArrayHasKey('outletName', $outlets[0]);
-    	$this->assertArrayHasKey('outletAddress', $outlets[0]);
+    	$this->assertArrayHasKey('address', $outlets[0]);
+    	$this->assertArrayHasKey('telephoneNumber', $outlets[0]);
     }
 
     /**
      * @dataProvider addressProvider
      */
-    public function testParseAddress($address, $expectedAddress)
-    {
-        $parsedOutletAddress = $this->outletScraper->parseAddress($address);
+    // public function testParseAddress($address, $expectedAddress)
+    // {
+    //     $parsedOutletAddress = $this->outletScraper->parseAddress($address);
 
-        $this->assertEquals($expectedAddress, $parsedOutletAddress);
-    }
+    //     $this->assertEquals($expectedAddress, $parsedOutletAddress);
+    // }
 
     public function addressProvider()
     {
