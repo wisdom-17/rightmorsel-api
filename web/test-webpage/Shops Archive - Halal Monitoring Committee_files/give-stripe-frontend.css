@@ -1,0 +1,91 @@
+.give-stripe-cc-field {
+    border: 1px solid #CCCCCC;
+    background-color: #FDFDFD;
+    padding: 10px;
+    height: 40px;
+}
+
+.give-stripe-cc-field.give-fl-input {
+    height: auto;
+    min-height: 50px;
+    line-height: inherit;
+    padding: 14px 10px;
+    background-color: #FFF;
+}
+
+.give-stripe-cc-field-wrap .give-fl-is-active .give-fl-input {
+    padding: 20px 12px 4px;
+    transition: padding 0.2s ease-in-out, border 0.2s ease-in-out;
+}
+
+.give-stripe-cc-field-wrap .give-fl-label span {
+    display: none;
+}
+
+.give-stripe-single-cc-field-wrap {
+    border: 1px solid #CCCCCC;
+    background-color: #FDFDFD;
+    padding: 10px;
+    height: 40px;
+    margin: 0 0 15px 0;
+}
+
+.give-form .give-stripe-cc-field.focus,
+.give-form .give-stripe-cc-field:focus {
+    background-color: #FFFFFF;
+}
+
+ul.give-stripe-payment-tabs {
+    display: block;
+    margin: 15px 0;
+    height: 45px;
+    border-bottom: 1px solid #CCCCCC;
+}
+
+ul.give-stripe-payment-tabs li {
+    list-style: none;
+    float: left;
+}
+
+ul.give-stripe-payment-tabs li span {
+    display: inline-block;
+}
+
+ul.give-stripe-payment-tabs li span svg {
+    overflow: visible;
+}
+
+ul.give-stripe-payment-tabs li span.give-stripe-card-icon svg {
+    width: 30px;
+    height: 30px;
+}
+
+ul.give-stripe-payment-tabs li span.give-stripe-payment-request-icon svg {
+    height: 30px;
+}
+
+ul.give-stripe-payment-tabs li.active a {
+    border-radius: 3px;
+    border: 1px solid #CCCCCC;
+    border-bottom: 2px solid #FFFFFF;
+}
+
+ul.give-stripe-payment-tabs li a {
+    border: 1px solid transparent;
+    padding: 10px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    outline: none;
+}
+
+ul.give-stripe-payment-tabs li a:focus,
+ul.give-stripe-payment-tabs li a:hover {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+.give-stripe-payment-request-button-wrap {
+    margin: 0 0 15px 0;
+}

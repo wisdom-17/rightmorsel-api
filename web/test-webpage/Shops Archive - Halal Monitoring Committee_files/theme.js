@@ -2,6 +2,23 @@
 // jQuery for adding classes onto the modal open and removing on close. 
 // This adds a class to HTML which then removes overflow disabling double scrolling.
 
+window.addEventListener("load", function(){
+	window.cookieconsent.initialise({
+		"palette": {
+			"popup": {
+				"background": "#000"
+			},
+			"button": {
+				"background": "#a12023"
+			}
+		},
+		"content": {
+			"message": "This website uses cookies to ensure you get the best experience on our website. By continuing, you agree to our use of cookies. ",
+			"href": "https://halalhmc.org/privacy-policy",
+		}
+    })
+});
+
 jQuery(document).ready(function(){
     jQuery(".supplier-modal").on("shown.bs.modal", function () {
         // This adds a class to the HTML of modal open
@@ -21,7 +38,31 @@ jQuery(document).ready(function(){
 
 
 // Owl initialise slider
-jQuery(document).ready(function(){
+jQuery(document).ready(function($){
+
+    $(function() {
+        $('.lazy').lazy(
+            {
+                effect: "fadeIn",
+                effectTime: 1000,
+                threshold: 0
+            }
+        );
+
+        $('.lazy-no-anim').lazy();
+    });
+
+    jQuery("#campaigns-slider").owlCarousel({
+        loop:false,
+        nav:true,
+        itemElement: 'div.slider-item',
+        items:1,
+        navText:[
+            "<i class='fa fa-chevron-left'></i>",
+            "<i class='fa fa-chevron-right'></i>"
+        ]
+    });
+
     jQuery("#meta-slider").owlCarousel({
         loop:false,
         nav:true,
@@ -149,6 +190,28 @@ jQuery(document).ready(function(){
 
      // Latest outlets slider
     jQuery("#latest-outlets").owlCarousel({
+        loop:false,
+        nav:true,
+        dots:false,
+        itemElement: 'div.post-item',
+        responsive:{
+            0:{
+                items:1,
+            },
+            650:{
+                items:2,
+            },
+            991:{
+                items:3,
+            }
+        },
+        navText:[
+            "<i class='fa fa-chevron-left'></i>",
+            "<i class='fa fa-chevron-right'></i>"
+        ]
+    });
+
+    jQuery("#latest-vacancies").owlCarousel({
         loop:false,
         nav:true,
         dots:false,

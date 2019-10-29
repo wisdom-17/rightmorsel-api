@@ -6,45 +6,68 @@
 Donors Choice Checkbox
 ----------------------------------------------*/
 [id*=give-form] .give-recurring-donors-choice {
-    margin: 0 0 25px;
-    display: block;
-    line-height:1em;
-    clear: both;
-    cursor: pointer;
+	margin: 0 0 25px;
+	display: block;
+	line-height: 1em;
+	clear: both;
+	cursor: pointer;
+}
+
+[id*=give-form] .give-recurring-donors-choice-period {
+	height: 28px;
+	font-size: 15px;
+	margin: 0 2px;
+	padding: 3px;
+	display: inline-block;
+	width: auto;
 }
 
 [id*=give-form] .give-recurring-donors-choice label {
-    cursor: pointer;
-    font-size: 16px;
-    display:inline-block;
-    margin:0;
-    padding:0;
+	cursor: pointer;
+	font-size: 16px;
+	display: inline-block;
+	margin: 0;
+	padding: 0;
 }
 
 [id*=give-form] .give-recurring-donors-choice input[type="checkbox"] {
-    margin: 0 3px 0 0;
-    position: relative;
-    width: auto;
+	margin: 0 3px 0 0;
+	position: relative;
+	width: auto;
 }
 
-.give-recurring-donors-choice + .give-btn-modal, .give-recurring-donors-choice + .give-btn-reveal {
-    display: block;
+/* Button mode support */
+[id*='give-form'] .give-recurring-donors-choice + .give-btn,
+[id*='give-form'] .give-recurring-admin-choice + .give-btn {
+	display: block;
+	clear: both;
 }
 
-/* Admin Choice */
-[id*='give-form'].give-recurring-form-admin fieldset {
-    clear: both;
+/* Admin Defined */
+[id*='give-form'].give-recurring-form-admin [id*='give-payment-mode-select'],
+.give-modal [id*='give-payment-mode-select'] {
+	clear: both;
 }
 
-[id*='give-form'].give-recurring-form-admin span.give-recurring-admin-choice {
-    float: left;
-    font-size: 18px;
-    font-style: italic;
-    margin: 0 0 0 10px;
+span.give-recurring-admin-choice {
+	float: left;
+	font-size: 18px;
+	font-style: italic;
+	margin: 3px 0 0 10px;
 }
 
-[id*='give-form'].give-recurring-form-admin div.give-donation-amount, [id*='give-form'].give-recurring-form-admin p.give-donation-amount {
-    float: left
+.give-modal span.give-recurring-admin-choice {
+	margin: 0 0 15px 0;
+}
+
+[id*='give-form'].give-recurring-form-admin div.give-donation-amount,
+[id*='give-form'].give-recurring-form-admin p.give-donation-amount {
+	float: left
+}
+
+.give-recurring-multi-level-message {
+	font-style: italic;
+	font-size: 0.95em;
 }
 
 /*--------------------------------------------
@@ -52,16 +75,39 @@ Donation Receipt Subscription
 ----------------------------------------------*/
 
 .give-subscription-billing-cycle {
-    font-style: italic;
-    display: block;
+	font-style: italic;
+	display: block;
+}
+
+.give-recurring-manage-subscriptions-receipt-link {
+	float: right;
 }
 
 .give-receipt-thead-text {
-    font-size: 16px;
-    text-align: center;
-    display: block;
+	font-size: 16px;
+	text-align: center;
+	display: block;
 }
 
-table#give-subscription-receipt td, table#give-subscription-receipt th {
-    text-align:left;
+table#give-subscription-receipt td,
+table#give-subscription-receipt th {
+	text-align: left;
+}
+
+span.give-donation-status-recurring svg {
+	fill: #2683B8;
+	width: 20px;
+	height: 20px;
+	position: relative;
+	top: 3px;
+}
+
+#give-recurring-modal-period-wrap {
+    padding: 0px 10px;
+    height: 35px;
+    line-height: 35px;
+}
+
+[id*='give-form'].give-recurring-form fieldset {
+	clear: both;
 }
