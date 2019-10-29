@@ -36,6 +36,16 @@ class OutletDetailsParserTest extends TestCase
         $this->assertEquals($expectedTelephoneNumber, $parsedTelephoneNumber);
     }
 
+    /**
+     * @dataProvider certificationStatusProvider
+     */
+    public function testParseCertificationStatus($divClass, $expectedCertificationStatus)
+    {
+        $parsedCertificationStatus = $this->outletDetailsParser->parseCertificationStatus($divClass);
+
+        $this->assertEquals($expectedCertificationStatus, $parsedCertificationStatus);
+    }
+
     public function addressProvider()
     {
         return [
@@ -105,6 +115,14 @@ class OutletDetailsParserTest extends TestCase
                 null
                 
             ]
+        ];
+    }
+
+    public function certificationStatusProvider()
+    {
+        return [
+            ['col-sm-6 single-post single-outlet-post grid-item mapodia certified', 'certified'],
+            ['col-sm-6 single-post single-outlet-post grid-item mapodia revoked', 'revoked']
         ];
     }
 }

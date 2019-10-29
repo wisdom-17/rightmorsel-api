@@ -53,4 +53,12 @@ class OutletDetailsParser
             return trim($telephone);
         }
     }
+
+    public function parseCertificationStatus($divClass)
+	{
+		$pieces 	= explode(' ', $divClass);
+		$lastClass 	= array_pop($pieces);
+
+		return $lastClass;
+	}
 }
