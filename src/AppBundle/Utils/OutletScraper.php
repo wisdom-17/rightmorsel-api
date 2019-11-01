@@ -39,9 +39,6 @@ class OutletScraper
 
 		// scrape details for each outlet
 		$outletDetails = $crawler->filter('div.single-outlet-post')->each(function ($node) {
-			$div 	= $node->filter('div');
-			$class 	= $div->attr('class');
-
 			// get outlet name
 			$outletName = $node->filter('div.outlet-content div.outlet-title h3')->text();
 
@@ -55,6 +52,9 @@ class OutletScraper
 				$this->abnormalFormatOutlets[$outletName] = $address;
 				return;
 			}else{
+				$div 	= $node->filter('div');
+				$class 	= $div->attr('class');
+
 				// parse certification status
 				$certificationStatus = $outletDetailsParser->parseCertificationStatus($class);
 
