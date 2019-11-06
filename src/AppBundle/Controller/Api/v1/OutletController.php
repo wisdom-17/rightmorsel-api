@@ -84,13 +84,14 @@ class OutletController extends Controller
 
 		// build the query
 		$queryBuilder
-			->select('outlet, GEO_DISTANCE(:latitude, :longitude, outlet.latitude, outlet.longitude) AS distance')
+			->select('outlet, GEO_DISTANCE(:latitude, :longitude, outlet.latitude, outlet.longitude) * 0.6213712 AS distance')
 			->having('distance <= :radius')
+			->where('outlet.isActive = :isActive')
 			->setParameter('latitude', $latitude)
 			->setParameter('longitude', $longitude)
 			->setParameter('radius', $radiusInKm)
-			->orderBy('distance')
-			->setMaxResults(10);
+			->setParameter('isActive', true)
+			->orderBy('distance');
 
 		$query = $queryBuilder->getQuery();
 
