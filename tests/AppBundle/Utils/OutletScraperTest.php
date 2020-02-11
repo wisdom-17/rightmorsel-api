@@ -17,7 +17,7 @@ class OutletScraperTest extends TestCase
     private $mockGeocoder;
     private $mockEm;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->mockGeocoder = $this->createMock(Provider::class);
         $this->mockEm       = $this->createMock(EntityManagerInterface::class);

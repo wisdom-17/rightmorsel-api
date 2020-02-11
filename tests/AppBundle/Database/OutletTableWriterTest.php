@@ -15,7 +15,7 @@ class OutletTableWriterTest extends TestCase
     private $validator;
     private $mockEm;
 
-    public function __construct()
+    protected function setUp(): void
     {
         $this->validator    = Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator();
         $this->mockEm       = $this->createMock(EntityManagerInterface::class);

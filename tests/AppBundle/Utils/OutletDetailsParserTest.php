@@ -10,7 +10,7 @@ class OutletDetailsParserTest extends TestCase
 {
     private $outletDetailsParser;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $outletDetailsParser = new OutletDetailsParser();
         $this->outletDetailsParser = $outletDetailsParser;
